@@ -3,31 +3,21 @@
 import Image from "next/image";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { gsap } from "gsap";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
-const Hero = () => {
+interface HeroProps {
+  brends: { id: string; naziv: string }[];
+  cars: { id: string; oblikKaroserije?: string }[];
+}
+
+const Hero = ({ brends, cars }: HeroProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // UI state for selects
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedType, setSelectedType] = useState("");
 
-  // Fetch brands and cars to populate filters just like on /cars
-  const { data: brendsRes } = useQuery({
-    queryKey: ["brends"],
-    queryFn: () => api.get("/brend"),
-  });
-
-  const { data: carsRes } = useQuery({
-    queryKey: ["cars"],
-    queryFn: () => api.get("/cars"),
-  });
-
-  const cars = carsRes?.data ?? [];
-
+  // Izračun tipova vozila iz server-side podataka
   const types: string[] = useMemo(() => {
     const set = new Set<string>();
     for (const c of cars) {
@@ -48,9 +38,7 @@ const Hero = () => {
 
   const scrollToSection = () => {
     const nextSection = document.getElementById("cars-section");
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: "smooth" });
-    }
+    if (nextSection) nextSection.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleSearch = () => {
@@ -67,7 +55,7 @@ const Hero = () => {
       <div className="absolute inset-0 -z-10">
         <Image
           src="/hero.jpg"
-          alt="Audi"
+          alt="Hero"
           fill
           className="object-cover object-center"
           priority
@@ -108,14 +96,13 @@ const Hero = () => {
 
         {/* Search bar */}
         <div className="bg-white/90 backdrop-blur-md rounded-full shadow-lg p-2 sm:p-3 md:p-4 flex flex-row items-center gap-2 sm:gap-3 md:gap-4 w-full max-w-3xl">
-          {/* Brand select */}
           <select
             className="flex-1 px-2 sm:px-3 md:px-4 py-2 sm:py-3 rounded-xl text-sm sm:text-base md:text-lg text-gray-800 focus:outline-none cursor-pointer"
             value={selectedBrand}
             onChange={(e) => setSelectedBrand(e.target.value)}
           >
             <option value="">Odaberite Marku</option>
-            {brendsRes?.map((b: any) => (
+            {brends.map((b) => (
               <option key={b.id} value={b.naziv}>
                 {b.naziv}
               </option>
@@ -124,7 +111,6 @@ const Hero = () => {
 
           <div className="w-px bg-gray-300 self-stretch"></div>
 
-          {/* Type select (SUV, Limuzina, itd.) */}
           <select
             className="flex-1 px-2 sm:px-3 md:px-4 py-2 sm:py-3 rounded-xl text-sm sm:text-base md:text-lg text-gray-800 focus:outline-none cursor-pointer"
             value={selectedType}
