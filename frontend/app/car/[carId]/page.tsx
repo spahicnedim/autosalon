@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import CarGalleryWithDetails from "@/components/CarGallery";
-import Link from "next/link";
 import ShareButton from "@/components/ShareButton";
 export const revalidate = 3600;
 

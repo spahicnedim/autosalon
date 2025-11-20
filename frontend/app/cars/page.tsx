@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import CarsPage from "@/components/CarsPage";
+import { getBrends, getCars } from "@/actions/actions";
 
 export const revalidate = 3600; // ISR: revalidate every hour
 
@@ -10,24 +11,6 @@ type Props = {
     page?: string;
   };
 };
-
-async function getCars() {
-  const res = await fetch("http://localhost:4000/api/cars", {
-    next: { revalidate: 3600 },
-  });
-  if (!res.ok) throw new Error("Failed to fetch cars");
-  const json = await res.json();
-  return json.data ?? [];
-}
-
-async function getBrends() {
-  const res = await fetch("http://localhost:4000/api/brend", {
-    next: { revalidate: 3600 },
-  });
-  if (!res.ok) throw new Error("Failed to fetch brends");
-  const json = await res.json();
-  return json ?? [];
-}
 
 export async function generateMetadata({
   searchParams,
