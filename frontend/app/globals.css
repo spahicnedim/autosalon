@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+@theme {
+    --color-primary: #D0021B;
+    --color-primary-dark: #A50116;
+    --color-secondary: #F5C400;
+    --color-secondary-dark: #C9A300;
+    --color-surface: #F9F9F9;
+    --color-text-dark: #2B2B2B;
+    --color-text-light: #FFFFFF;
+    --color-border: #E5E5E5;
+    --color-accent: #333333;
+    --color-footer-bg: #1F1F1F;
+}
+
+a, button {
+    @apply cursor-pointer;
+}
+
+body {
+    @apply bg-[--color-surface] text-[--color-text-dark] antialiased;
+}
+
+
+.btn-primary {
+    @apply bg-[--color-primary] text-[--color-text-light] font-semibold rounded-lg px-4 py-2 transition-colors duration-200 hover:bg-[--color-primary-dark];
+}
+
+.btn-secondary {
+    @apply bg-[--color-secondary] text-[--color-text-dark] font-semibold rounded-lg px-4 py-2 transition-colors duration-200 hover:bg-[--color-secondary-dark];
+}
+
+
+.link {
+    @apply text-[--color-primary] hover:text-[--color-secondary] transition-colors duration-200;
+}
+
+
+.navbar {
+    @apply bg-[--color-accent] text-[--color-text-light] shadow-md;
+}
+
+
+.card {
+    @apply bg-white border border-[--color-border] rounded-2xl shadow-sm p-4;
+}
+
+
+.footer {
+    @apply bg-[--color-footer-bg] text-[--color-secondary] py-6;
+}

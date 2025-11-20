@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Car {
+  id              Int          @id @default(autoincrement())
+  brendId         Int
+  brend           Brend        @relation(fields: [brendId], references: [id])
+  model           String
+  godina          Int
+  kilometraza     Int
+  cijena          Float
+  oblikKaroserije String
+  gorivo          String
+  mjenjac         String
+  boja            String
+  snaga           Int
+  zapremina       Int
+  opis            String
+  izdvojeno       Boolean      @default(false)
+  pregledi        Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  slike           CarImage[]   @relation("CarImages")
+  oprema          AutoOprema[]
+
+  @@index([model])
+  @@index([izdvojeno])
+  @@index([brendId])
+}
+
+model CarImage {
+  id        Int     @id @default(autoincrement())
+  car       Car     @relation(fields: [carId], references: [id], name: "CarImages")
+  carId     Int
+  url       String
+  mediumUrl String
+  thumbUrl  String
+  isMain    Boolean @default(false)
+}
+
+model Oprema {
+  id    Int          @id @default(autoincrement())
+  naziv String       @unique
+  cars  AutoOprema[]
+}
+
+model AutoOprema {
+  id       Int @id @default(autoincrement())
+  carId    Int
+  opremaId Int
+
+  car    Car    @relation(fields: [carId], references: [id])
+  oprema Oprema @relation(fields: [opremaId], references: [id])
+
+  @@unique([carId, opremaId])
+}
+
+model Brend {
+  id    Int     @id @default(autoincrement())
+  naziv String  @unique
+  logo  String?
+  cars  Car[]
+}

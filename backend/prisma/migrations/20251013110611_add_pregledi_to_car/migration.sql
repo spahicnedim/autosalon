@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Car" ADD COLUMN     "pregledi" INTEGER NOT NULL DEFAULT 0;
