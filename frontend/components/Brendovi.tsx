@@ -9,7 +9,7 @@ interface Brend {
 }
 
 async function getBrends(): Promise<Brend[]> {
-  const res = await fetch("http://localhost:4000/api/brend", {
+  const res = await fetch("http://autosalon_backend:4000/api/brend", {
     next: { revalidate: 3600 },
   });
   if (!res.ok) throw new Error("Failed to fetch brends");

@@ -21,6 +21,7 @@ import { pdf } from "@react-pdf/renderer";
 interface CarGalleryProps {
   slike: { url: string; thumbUrl: string }[];
   car: {
+    Karoserija: string;
     id: number;
     createdAt: string;
     brend: { naziv: string };
@@ -311,7 +312,9 @@ export default function CarGalleryWithDetails({ slike, car }: CarGalleryProps) {
                   />
                   Karoserija
                 </span>
-                <span className="font-bold">{car.oblikKaroserije || "—"}</span>
+                <span className="font-bold">
+                  {car.Karoserija?.naziv || "—"}
+                </span>
               </div>
             </div>
           </div>

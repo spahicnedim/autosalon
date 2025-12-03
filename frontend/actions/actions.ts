@@ -22,3 +22,10 @@ export async function getOprema() {
   const json = await res.json();
   return json ?? [];
 }
+
+export async function getKaroserija() {
+  const res = await fetch("http://autosalon_backend:4000/api/karoserija");
+  if (!res.ok) throw new Error("Failed to fetch karoserija");
+  const json = await res.json();
+  return json ?? [];
+}

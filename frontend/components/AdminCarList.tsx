@@ -21,9 +21,9 @@ export default function AdminCarList({ cars }: Props) {
 
   return (
     <div className="p-6">
-      <Button onClick={() => (window.location.href = "/admin/cars/new")}>
-        + Add Car
-      </Button>
+      {/*<Button onClick={() => (window.location.href = "/admin/cars/new")}>*/}
+      {/*  + Add Car*/}
+      {/*</Button>*/}
       <div className="mt-6 space-y-4">
         {cars.map((car: any) => (
           <div

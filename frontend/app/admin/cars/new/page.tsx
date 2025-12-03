@@ -342,11 +342,17 @@
 //
 // export default AdminAddCarPage;
 
-import { getBrends, getOprema } from "@/actions/actions";
+import { getBrends, getKaroserija, getOprema } from "@/actions/actions";
 import AdminAddCarForm from "@/components/AdminAddCarForm";
 
 export default async function AdminAddCarPage() {
-  const [brends, oprema] = await Promise.all([getBrends(), getOprema()]);
+  const [brends, oprema, karoserija] = await Promise.all([
+    getBrends(),
+    getOprema(),
+    getKaroserija(),
+  ]);
 
-  return <AdminAddCarForm brends={brends} oprema={oprema} />;
+  return (
+    <AdminAddCarForm brends={brends} oprema={oprema} karoserija={karoserija} />
+  );
 }

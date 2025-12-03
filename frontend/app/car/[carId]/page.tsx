@@ -39,33 +39,6 @@ const Page = async ({ params }: PageProps) => {
 
   return (
     <div className="w-full bg-[#050B20]">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full flex justify-between items-center px-6 md:px-12 py-6 z-30 bg-transparent">
-        <div className="text-2xl font-bold tracking-wide">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={150}
-            height={50}
-            className="object-contain"
-          />
-        </div>
-        <ul className="hidden md:flex gap-8 text-lg font-medium">
-          <li className="hover:text-gray-500 text-white cursor-pointer">
-            Početna
-          </li>
-          <li className="hover:text-gray-500 text-white  cursor-pointer">
-            Autosalon
-          </li>
-          <li className="hover:text-gray-500 text-white  cursor-pointer">
-            Usluge
-          </li>
-          <li className="hover:text-gray-500 text-white  cursor-pointer">
-            Webshop
-          </li>
-        </ul>
-      </nav>
-
       {/* Filter Section */}
       <section className="pt-10 pb-16  flex justify-center"></section>
 

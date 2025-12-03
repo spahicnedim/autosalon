@@ -32,7 +32,7 @@ interface Car {
 }
 
 async function getCars(): Promise<Car[]> {
-  const res = await fetch("http://localhost:4000/api/cars", {
+  const res = await fetch("http://autosalon_backend:4000/api/cars", {
     next: { revalidate: 3600 },
   });
   if (!res.ok) throw new Error("Failed to fetch cars");

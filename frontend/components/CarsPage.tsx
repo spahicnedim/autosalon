@@ -19,12 +19,14 @@ type CarsPageProps = {
   searchParams: any;
   initialCars: any[];
   initialBrends: any[];
+  karoserija: any[];
 };
 
 const CarsPage = ({
   searchParams,
   initialCars,
   initialBrends,
+  karoserija,
 }: CarsPageProps) => {
   const router = useRouter();
   const params = useSearchParams();
@@ -57,7 +59,7 @@ const CarsPage = ({
   const types: string[] = useMemo(() => {
     const set = new Set<string>();
     for (const c of cars) {
-      if (c.oblikKaroserije) set.add(c.oblikKaroserije);
+      if (c.Karoserija?.naziv) set.add(c.Karoserija?.naziv);
     }
     return Array.from(set);
   }, [cars]);
@@ -66,7 +68,7 @@ const CarsPage = ({
   const filteredCars = cars.filter(
     (car: any) =>
       (brandFilter ? car.brend?.naziv === brandFilter : true) &&
-      (typeFilter ? car.oblikKaroserije === typeFilter : true),
+      (typeFilter ? car.Karoserija?.naziv === typeFilter : true),
   );
 
   // Sorting
@@ -89,33 +91,6 @@ const CarsPage = ({
 
   return (
     <div className="w-full bg-[#050B20]">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full flex justify-between items-center px-6 md:px-12 py-6 z-30 bg-transparent">
-        <div className="text-2xl font-bold tracking-wide">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={150}
-            height={50}
-            className="object-contain"
-          />
-        </div>
-        <ul className="hidden md:flex gap-8 text-lg font-medium">
-          <li className="hover:text-gray-500 text-white cursor-pointer">
-            Početna
-          </li>
-          <li className="hover:text-gray-500 text-white  cursor-pointer">
-            Autosalon
-          </li>
-          <li className="hover:text-gray-500 text-white  cursor-pointer">
-            Usluge
-          </li>
-          <li className="hover:text-gray-500 text-white  cursor-pointer">
-            Webshop
-          </li>
-        </ul>
-      </nav>
-
       {/* Filter Section */}
       <section className="pt-32 pb-16  flex justify-center">
         <div className="bg-white/90 backdrop-blur-md rounded-full shadow-lg p-2 sm:p-3 md:p-4 flex flex-row items-center gap-2 sm:gap-3 md:gap-4 w-full max-w-3xl">
@@ -126,7 +101,7 @@ const CarsPage = ({
             onChange={(e) => setSelectedBrand(e.target.value)}
           >
             <option value="">Odaberite Marku</option>
-            {brendsRes?.map((b: any) => (
+            {initialBrends?.map((b: any) => (
               <option key={b.id} value={b.naziv}>
                 {b.naziv}
               </option>
@@ -142,9 +117,9 @@ const CarsPage = ({
             onChange={(e) => setSelectedType(e.target.value)}
           >
             <option value="">Tip vozila</option>
-            {types.map((t) => (
-              <option key={t} value={t}>
-                {t}
+            {karoserija.data.map((t) => (
+              <option key={t.id} value={t.naziv}>
+                {t.naziv}
               </option>
             ))}
           </select>
@@ -184,9 +159,9 @@ const CarsPage = ({
       </section>
 
       {/* Cars Grid Section */}
-      <section className="pt-24 py-20 bg-[#F9FBFC] flex flex-col items-center justify-center mx-auto rounded-t-[80px]">
-        <div className="w-full max-w-7xl px-6 mb-18 flex justify-start">
-          <h2 className="text-3xl sm:text-4xl md:text-4xl font-bold">
+      <section className="pt-16 py-20 bg-[#F9FBFC] flex flex-col items-center justify-center mx-auto rounded-t-[80px]">
+        <div className="w-full max-w-7xl px-6 mb-12 flex justify-start">
+          <h2 className="text-4xl sm:text-4xl md:text-4xl font-bold">
             Sva vozila
           </h2>
         </div>

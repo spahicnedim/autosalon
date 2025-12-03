@@ -12,3 +12,14 @@ export const getOprema = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to fetch oprema" });
   }
 };
+
+export const createOprema = async (req: Request, res: Response) => {
+  try {
+    const { naziv } = req.body;
+    const oprema = await prisma.oprema.create({ data: { naziv } });
+    res.status(201).json(oprema);
+  } catch (error) {
+    console.error("Create oprema error:", error);
+    res.status(500).json({ message: "Failed to create oprema" });
+  }
+};

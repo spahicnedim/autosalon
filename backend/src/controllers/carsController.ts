@@ -82,6 +82,7 @@ export const getCars = async (req: Request, res: Response) => {
           slike: { where: { isMain: true }, take: 1 },
           brend: true,
           oprema: { include: { oprema: true } },
+          Karoserija: true,
         },
       }),
     ]);
@@ -111,6 +112,7 @@ export const getCarById = async (req: Request, res: Response) => {
       include: {
         slike: true,
         brend: true,
+        Karoserija: true,
         oprema: { include: { oprema: true } },
       },
     });
@@ -131,7 +133,7 @@ export const createCar = async (req: Request, res: Response) => {
       model,
       godina,
       cijena,
-      oblikKaroserije,
+      karoserijaId,
       gorivo,
       mjenjac,
       boja,
@@ -167,7 +169,7 @@ export const createCar = async (req: Request, res: Response) => {
         model,
         godina: Number(godina),
         cijena: Number(cijena),
-        oblikKaroserije,
+        karoserijaId: Number(karoserijaId),
         gorivo,
         mjenjac,
         boja,
@@ -184,12 +186,6 @@ export const createCar = async (req: Request, res: Response) => {
         oprema: { include: { oprema: true } },
       },
     });
-
-    // for (const img of car.slike) {
-    //   img.url = await getPresignedUrl(img.url);
-    //   img.mediumUrl = await getPresignedUrl(img.mediumUrl);
-    //   img.thumbUrl = await getPresignedUrl(img.thumbUrl);
-    // }
 
     res.status(201).json(car);
   } catch (error) {
@@ -209,7 +205,9 @@ export const updateCar = async (req: Request, res: Response) => {
       model: payload.model,
       godina: payload.godina ? Number(payload.godina) : undefined,
       cijena: payload.cijena ? Number(payload.cijena) : undefined,
-      oblikKaroserije: payload.oblikKaroserije,
+      karoserijaId: payload.karoserijaId
+        ? Number(payload.karoserijaId)
+        : undefined,
       gorivo: payload.gorivo,
       mjenjac: payload.mjenjac,
       boja: payload.boja,

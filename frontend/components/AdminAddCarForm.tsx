@@ -1,22 +1,50 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@radix-ui/react-select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 
-export default function AdminAddCarForm({ brends, oprema }) {
-  const [form, setForm] = useState({
+interface CarForm {
+  karoserijaId: string | readonly string[] | number | undefined;
+  brendId: string;
+  model: string;
+  godina: string;
+  kilometraza: string;
+  cijena: string;
+  gorivo: string;
+  mjenjac: string;
+  boja: string;
+  snaga: string;
+  zapremina: string;
+  opis: string;
+  opremaIds: number[];
+}
+
+export default function AddCarForm({
+  brends,
+  oprema,
+  karoserija,
+}: {
+  brends: any[];
+  oprema: any[];
+  karoserija: any[];
+}) {
+  const qc = useQueryClient();
+
+  const [form, setForm] = useState<CarForm>({
     brendId: "",
     model: "",
     godina: "",
     kilometraza: "",
     cijena: "",
-    oblikKaroserije: "",
+    karoserijaId: "",
     gorivo: "",
     mjenjac: "",
     boja: "",
@@ -26,36 +54,39 @@ export default function AdminAddCarForm({ brends, oprema }) {
     opremaIds: [],
   });
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const createCar = useMutation({
+    mutationFn: async (data: any) => {
+      const formData = new FormData();
 
-    const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
-      if (key === "opremaIds") {
-        value.forEach((id) => formData.append("opremaIds[]", id));
-      } else {
-        formData.append(key, value as any);
-      }
-    });
+      Object.keys(data).forEach((key) => {
+        if (key === "opremaIds") {
+          data.opremaIds.forEach((id: number) =>
+            formData.append("opremaIds[]", id.toString()),
+          );
+        } else {
+          formData.append(key, data[key]);
+        }
+      });
 
-    files.forEach((file) => formData.append("slike", file));
+      files.forEach((file) => formData.append("slike", file));
 
-    await fetch("/api/cars", {
-      method: "POST",
-      body: formData,
-    });
+      return api.post("/cars", formData, true);
+    },
+    onSuccess: async () => {
+      try {
+        await fetch("/api/revalidate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paths: ["/", "/cars"] }),
+        });
+      } catch {}
 
-    // Revalidate
-    await fetch("/api/revalidate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ paths: ["/", "/cars"] }),
-    });
-
-    window.location.href = "/admin/cars";
-  };
+      qc.invalidateQueries({ queryKey: ["cars"] });
+      window.location.href = "/admin/cars";
+    },
+  });
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -63,19 +94,24 @@ export default function AdminAddCarForm({ brends, oprema }) {
     >,
   ) => {
     const { name, value } = e.target;
-    setForm((prev: any) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleOpremaChange = (id: number) => {
-    setForm((prev: any) => {
+    setForm((prev) => {
       const exists = prev.opremaIds.includes(id);
       return {
         ...prev,
         opremaIds: exists
-          ? prev.opremaIds.filter((x: number) => x !== id)
+          ? prev.opremaIds.filter((x) => x !== id)
           : [...prev.opremaIds, id],
       };
     });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createCar.mutate(form);
   };
 
   return (
@@ -156,12 +192,20 @@ export default function AdminAddCarForm({ brends, oprema }) {
 
               <div>
                 <Label>Oblik karoserije</Label>
-                <Input
-                  name="oblikKaroserije"
-                  placeholder="Limuzina, SUV..."
-                  value={form.oblikKaroserije}
+                <select
+                  name="karoserijaId"
+                  value={form.karoserijaId}
                   onChange={handleChange}
-                />
+                  required
+                  className="border rounded-md px-3 py-2 w-full"
+                >
+                  <option value="">Odaberi karoseriju</option>
+                  {karoserija.data?.map((k: any) => (
+                    <option key={k.id} value={k.id}>
+                      {k.naziv}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -233,7 +277,7 @@ export default function AdminAddCarForm({ brends, oprema }) {
             <div>
               <Label className="font-semibold mb-2 block">Oprema</Label>
               <div className="grid md:grid-cols-3 gap-2">
-                {oprema.data?.map((o: any) => (
+                {oprema?.data?.map((o: any) => (
                   <div key={o.id} className="flex items-center space-x-2">
                     <Checkbox
                       checked={form.opremaIds.includes(o.id)}
@@ -290,8 +334,12 @@ export default function AdminAddCarForm({ brends, oprema }) {
 
             <Separator className="my-6" />
 
-            <Button type="submit" className="w-full">
-              Sačuvaj automobil
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={createCar.isLoading}
+            >
+              {createCar.isLoading ? "Spremanje..." : "Sačuvaj automobil"}
             </Button>
           </form>
         </CardContent>

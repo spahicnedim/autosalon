@@ -6,6 +6,7 @@ import "./globals.css";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "@/components/Footer";
+import Nav from "@/components/Nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-50">
+        <Nav />
         <QueryClientProvider client={client}>{children}</QueryClientProvider>
         <Footer />
       </body>

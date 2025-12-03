@@ -7,6 +7,7 @@ import carsRouter from "./routes/cars";
 import authRouter from "./routes/auth";
 import brendRouter from "./routes/brend";
 import opremaRouter from "./routes/oprema";
+import karoserijaRouter from "./routes/karoserija";
 import errorHandler from "./middlewares/errorHandler";
 
 dotenv.config();
@@ -23,7 +24,7 @@ app.use(
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 //rate limiter
@@ -40,8 +41,9 @@ app.use(limiter);
 // routes
 app.use("/api/auth", authRouter);
 app.use("/api/cars", carsRouter);
-app.use("/api/brend", brendRouter)
+app.use("/api/brend", brendRouter);
 app.use("/api/oprema", opremaRouter);
+app.use("/api/karoserija", karoserijaRouter);
 
 // healt
 app.get("/health", (req, res) => res.json({ ok: true }));
@@ -49,8 +51,3 @@ app.get("/health", (req, res) => res.json({ ok: true }));
 app.use(errorHandler);
 
 export default app;
-
-
-
-
-

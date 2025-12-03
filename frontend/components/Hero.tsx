@@ -4,13 +4,15 @@ import Image from "next/image";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface HeroProps {
   brends: { id: string; naziv: string }[];
-  cars: { id: string; oblikKaroserije?: string }[];
+  cars: { id: string; Karoserija?: { naziv: string } }[];
+  karoserija: { data: { id: string; naziv: string }[] };
 }
 
-const Hero = ({ brends, cars }: HeroProps) => {
+const Hero = ({ brends, cars, karoserija }: HeroProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -21,7 +23,7 @@ const Hero = ({ brends, cars }: HeroProps) => {
   const types: string[] = useMemo(() => {
     const set = new Set<string>();
     for (const c of cars) {
-      if (c.oblikKaroserije) set.add(c.oblikKaroserije);
+      if (c.Karoserija?.naziv) set.add(c.Karoserija?.naziv);
     }
     return Array.from(set);
   }, [cars]);
@@ -63,25 +65,6 @@ const Hero = ({ brends, cars }: HeroProps) => {
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
-      {/* Navbar */}
-      <nav className="absolute top-0 left-0 w-full flex justify-between items-center px-6 md:px-12 py-6 z-20 text-white">
-        <div className="text-2xl font-bold tracking-wide">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={150}
-            height={50}
-            className="object-contain"
-          />
-        </div>
-        <ul className="hidden md:flex gap-8 text-lg font-medium">
-          <li className="hover:text-gray-300 cursor-pointer">Početna</li>
-          <li className="hover:text-gray-300 cursor-pointer">Autosalon</li>
-          <li className="hover:text-gray-300 cursor-pointer">Usluge</li>
-          <li className="hover:text-gray-300 cursor-pointer">Webshop</li>
-        </ul>
-      </nav>
-
       {/* Hero Content */}
       <div
         ref={contentRef}
@@ -117,9 +100,9 @@ const Hero = ({ brends, cars }: HeroProps) => {
             onChange={(e) => setSelectedType(e.target.value)}
           >
             <option value="">Tip vozila</option>
-            {types.map((t) => (
-              <option key={t} value={t}>
-                {t}
+            {karoserija.data.map((t) => (
+              <option key={t.id} value={t.naziv}>
+                {t.naziv}
               </option>
             ))}
           </select>

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import CarsPage from "@/components/CarsPage";
-import { getBrends, getCars } from "@/actions/actions";
+import { getBrends, getCars, getKaroserija } from "@/actions/actions";
 
 export const revalidate = 3600; // ISR: revalidate every hour
 
@@ -50,12 +50,17 @@ export async function generateMetadata({
 }
 
 export default async function Page({ searchParams }: Props) {
-  const [cars, brends] = await Promise.all([getCars(), getBrends()]);
+  const [cars, brends, karoserija] = await Promise.all([
+    getCars(),
+    getBrends(),
+    getKaroserija(),
+  ]);
   return (
     <CarsPage
       searchParams={searchParams}
       initialCars={cars}
       initialBrends={brends}
+      karoserija={karoserija}
     />
   );
 }

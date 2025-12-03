@@ -23,29 +23,29 @@ const LoginPage = () => {
     mutationFn: (data: any) => api.post("/auth/login", data),
     onSuccess: (res) => {
       localStorage.setItem("token", res.token);
-      router.push("/admin/cars");
+      router.push("/admin");
     },
     onError: () => alert("Pogresni kredencijali"),
   });
 
   return (
-    <div className='flex h-screen items-center justify-center'>
-      <Card className='w-96'>
+    <div className="flex h-screen items-center justify-center">
+      <Card className="w-96">
         <CardHeader>
           <CardTitle>Prijava</CardTitle>
         </CardHeader>
         <CardContent>
           <form
             onSubmit={handleSubmit((d) => mutation.mutate(d))}
-            className='space-y-4'
+            className="space-y-4"
           >
-            <Input placeholder='Korisnicko ime' {...register("username")} />
+            <Input placeholder="Korisnicko ime" {...register("username")} />
             <Input
-              placeholder='Lozinka'
-              type='password'
+              placeholder="Lozinka"
+              type="password"
               {...register("password")}
             />
-            <Button type='submit' className='w-full'>
+            <Button type="submit" className="w-full">
               Login
             </Button>
           </form>

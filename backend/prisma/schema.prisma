@@ -9,26 +9,27 @@ datasource db {
 }
 
 model Car {
-  id              Int          @id @default(autoincrement())
-  brendId         Int
-  brend           Brend        @relation(fields: [brendId], references: [id])
-  model           String
-  godina          Int
-  kilometraza     Int
-  cijena          Float
-  oblikKaroserije String
-  gorivo          String
-  mjenjac         String
-  boja            String
-  snaga           Int
-  zapremina       Int
-  opis            String
-  izdvojeno       Boolean      @default(false)
-  pregledi        Int          @default(0)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  slike           CarImage[]   @relation("CarImages")
-  oprema          AutoOprema[]
+  id           Int          @id @default(autoincrement())
+  brendId      Int
+  brend        Brend        @relation(fields: [brendId], references: [id])
+  model        String
+  godina       Int
+  kilometraza  Int
+  cijena       Float
+  karoserijaId Int?
+  Karoserija   Karoserija?  @relation(fields: [karoserijaId], references: [id])
+  gorivo       String
+  mjenjac      String
+  boja         String
+  snaga        Int
+  zapremina    Int
+  opis         String
+  izdvojeno    Boolean      @default(false)
+  pregledi     Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  slike        CarImage[]   @relation("CarImages")
+  oprema       AutoOprema[]
 
   @@index([model])
   @@index([izdvojeno])
@@ -66,5 +67,11 @@ model Brend {
   id    Int     @id @default(autoincrement())
   naziv String  @unique
   logo  String?
+  cars  Car[]
+}
+
+model Karoserija {
+  id    Int    @id @default(autoincrement())
+  naziv String @unique
   cars  Car[]
 }
